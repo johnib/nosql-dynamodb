@@ -4,10 +4,30 @@
   <meta charset="UTF-8">
   <title>NoSQL-DynamoDB</title>
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <script src="bower_components/angular/angular.min.js"></script>
+  <script src="app/app.js"></script>
 </head>
 <body>
-<div class="container">
-  <h1>NoSQL-DynamoDB</h1>
+<div class="container" data-ng-app="nosql" data-ng-controller="main">
+  <div class="jumbotron">
+    <h1>NoSQL-DynamoDB</h1>
+    <hr/>
+    <div>
+      <h4>Select a query:</h4>
+      <label>
+        <select class="form-control" data-ng-model="form.id">
+          <option data-ng-repeat="query in queryEnum" data-ng-value="{{query.id}}">{{query.description}}</option>
+        </select>
+      </label>
+      <div>
+        <label data-ng-show="queryEnum[form.id].paramRequired">
+          {{queryEnum[form.id].paramInputText}}
+          <input type="text" class="form-control" data-ng-model="form.paramValue">
+        </label>
+      </div>
+      <button class="btn btn-default" data-ng-click="submit(form)">Query</button>
+    </div>
+  </div>
 </div>
 </body>
 </html>
