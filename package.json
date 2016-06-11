@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/johnib/nosql-dynamodb/issues"
   },
-  "homepage": "https://github.com/johnib/nosql-dynamodb#readme"
+  "homepage": "https://github.com/johnib/nosql-dynamodb#readme",
+  "dependencies": {
+    "aws-sdk": "^2.3.19",
+    "express": "^4.13.4",
+    "ioredis": "^2.0.1",
+    "morgan": "^1.7.0"
+  }
 }
