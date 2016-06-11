@@ -1,0 +1,19 @@
+{
+  "name": "nosql-dynamodb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnib/nosql-dynamodb.git"
+  },
+  "author": "Jonathan Rubin Yaniv",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnib/nosql-dynamodb/issues"
+  },
+  "homepage": "https://github.com/johnib/nosql-dynamodb#readme"
+}
