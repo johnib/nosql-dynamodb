@@ -106,10 +106,12 @@ function scanLastWeek() {
 
   //noinspection JSUnresolvedFunction
   return q.allSettled(promises)
-    .then(arr =>
-      arr.filter(defer => defer.state === "fulfilled") // filter fulfilled
-        .map(defer => defer.value.Items) // look at the results
-        .reduce((prevUnion, currentArray) => prevUnion.concat(currentArray), [])); // union results
+  // filter rejected promises
+    .then(arr => arr.filter(defer => defer.state === "fulfilled")
+    // zoom to the results
+      .map(defer => defer.value.Items)
+      // union results
+      .reduce((prevUnion, currentArray) => prevUnion.concat(currentArray), []));
 }
 
 /**
