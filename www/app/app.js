@@ -1,45 +1,40 @@
 var app = angular.module('nosql', []);
 
-app.service('dynamodb', function () {
+app.service('dynamodb', function ($http) {
   console.log("dynamodb service initialized");
+
+  this.getQueryEnum = function () {
+    return $http.get('/queryList')
+  };
+
+  this.sendQuery = function (form) {
+    var params = Object.keys(form).reduce(function (prev, key) {
+      return prev + form[key] + '/';
+    }, "/");
+
+    return $http.get('/queryUtils' + params);
+  }
+
 });
 
-app.controller('main', function ($scope) {
+app.controller('main', function ($scope, dynamodb) {
   console.log("main controller initialized");
+  var self = $scope;
 
-  $scope.queryEnum = [
-    {
-      id: 0,
-      description: "Incidents from last week",
-      paramRequired: false
-    },
-    {
-      id: 1,
-      description: "Incidents for specific device",
-      paramRequired: true,
-      paramInputText: "Enter device ID:"
-    },
-    {
-      id: 2,
-      description: "All unable_to_remove devices",
-      paramRequired: false
-    },
-    {
-      id: 3,
-      description: "Incidents related to specific malware",
-      paramRequired: true,
-      paramInputText: "Enter malware name:"
-    },
-    {
-      id: 4,
-      description: "Incidents related to specific company",
-      paramRequired: true,
-      paramInputText: "Enter company name:"
-    }
-  ];
+  dynamodb.getQueryEnum()
+    .then(function (queryEnum) {
+      self.queryEnum = queryEnum;
+    });
 
   $scope.submit = function (form) {
     console.log(form);
-  }
 
+    dynamodb.sendQuery(form)
+      .then(function (res) {
+        console.log(res);
+      })
+      .catch(function (err) {
+        console.error(err);
+      })
+  }
 });
