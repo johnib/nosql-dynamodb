@@ -22,8 +22,8 @@ app.controller('main', function ($scope, dynamodb) {
   var self = $scope;
 
   dynamodb.getQueryEnum()
-    .then(function (queryEnum) {
-      self.queryEnum = queryEnum;
+    .then(function (res) {
+      self.queryEnum = res.data;
     });
 
   $scope.submit = function (form) {

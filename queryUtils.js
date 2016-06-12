@@ -74,20 +74,6 @@ function createQueriesForDates(startDate, endDate) {
   return queries;
 }
 
-function scan(params) {
-  let defer = q.defer();
-
-  docClient.scan(params, function (err, data) {
-    if (err) {
-      defer.reject(err);
-    } else {
-      defer.resolve(data);
-    }
-  });
-
-  return defer.promise;
-}
-
 /**
  * Returns a promise for data of the past 7 days.
  * Note that past 7 days might cross to previous month, in that case - 2 dynamo tables will be queried
@@ -115,15 +101,38 @@ function scanLastWeek() {
 }
 
 /**
+ * Returns a promise for all data of the action specified in descending order.
+ *
+ * @param actionType
+ * @returns {Promise}
+ */
+function queryByAction(actionType) {
+  let now = new Date();
+  let params = {
+    TableName: `IOT-${now.getFullYear()}-${now.getMonth() + 1}`,
+    IndexName: 'action-timestamp-index',
+    KeyConditionExpression: `#action=:action`,
+    ExpressionAttributeNames: {"#action": "action"},
+    ExpressionAttributeValues: {":action": actionType},
+    ScanIndexForward: false // descending
+  };
+
+  return query(params)
+    .then(data => data.Items)
+}
+
+/**
  * Returns a promise for data on the specified query.
  *
  * @param query
- * @returns {Q.Promise}
+ * @returns {Promise}
  */
 function queryHandler(query) {
   switch (query.id) {
     case "0":
       return scanLastWeek();
+    case "2":
+      return queryByAction("unable_to_remove");
   }
 }
 
@@ -131,3 +140,42 @@ module.exports = {
   handler: queryHandler,
   "enum": queryEnum
 };
+
+/**
+ * Promise-based scan command for dynamodb
+ *
+ * @param params
+ * @returns {Promise}
+ */
+function scan(params) {
+  let defer = q.defer();
+
+  docClient.scan(params, function (err, data) {
+    if (err) {
+      defer.reject(err);
+    } else {
+      defer.resolve(data);
+    }
+  });
+
+  return defer.promise;
+}
+
+/**
+ * Promise-based query command for dynamodb
+ * @param params
+ * @returns {Promise}
+ */
+function query(params) {
+  let defer = q.defer();
+
+  docClient.query(params, (err, data) => {
+    if (err) {
+      defer.reject(err);
+    } else {
+      defer.resolve(data);
+    }
+  });
+
+  return defer.promise;
+}
