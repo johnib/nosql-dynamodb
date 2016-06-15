@@ -10,7 +10,7 @@ let express = require('express'),
   queryUtils = require('./queryUtils'),
   aws = require('aws-sdk');
 
-aws.config.update({region: 'us-west-2'});
+aws.config.update({region: 'us-west-2'}); // Oregon
 
 let app = express();
 

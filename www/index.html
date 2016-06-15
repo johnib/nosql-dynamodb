@@ -8,11 +8,11 @@
   <script src="app/app.js"></script>
 </head>
 <body>
-<div class="container" data-ng-app="nosql" data-ng-controller="main">
+<div class="container" data-ng-app="nosql" data-ng-controller="main as vm">
   <div class="jumbotron">
     <h1>NoSQL-DynamoDB</h1>
     <hr/>
-    <div>
+    <div id="query">
       <h4>Select a query:</h4>
       <label>
         <select class="form-control" data-ng-model="form.id">
@@ -27,6 +27,31 @@
       </div>
       <button class="btn btn-default" data-ng-click="submit(form)">Query</button>
     </div>
+  </div>
+
+  <div id="results" class="container" data-ng-show="results">
+    <table class="table table-hover table-condensed">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Timestamp</th>
+        <th>Device ID</th>
+        <th>Malware</th>
+        <th>Company</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr data-ng-repeat="item in results">
+        <td>{{$index}}</td>
+        <td>{{item.timestamp | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+        <td>{{item.device_id}}</td>
+        <td>{{item.company}}</td>
+        <td>{{item.malware}}</td>
+        <td>{{item.action}}</td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 </body>

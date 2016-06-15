@@ -32,9 +32,18 @@ app.controller('main', function ($scope, dynamodb) {
     dynamodb.sendQuery(form)
       .then(function (res) {
         console.log(res);
+
+        return res.data;
+      })
+      .then(function (data) {
+        data.sort(function (itemA, itemB) {
+          return itemA.timestamp - itemB.timestamp
+        });
+
+        $scope.results = data;
       })
       .catch(function (err) {
         console.error(err);
       })
-  }
+  };
 });
