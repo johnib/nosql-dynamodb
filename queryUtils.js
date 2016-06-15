@@ -122,6 +122,25 @@ function queryByAction(actionType) {
 }
 
 /**
+ * Returns a promise for all data of the device_id.
+ *
+ * @param deviceId
+ * @returns {Promise}
+ */
+function queryByDeviceId(deviceId) {
+  let now = new Date();
+  let params = {
+    TableName: `IOT-${now.getFullYear()}-${now.getMonth() + 1}`,
+    KeyConditionExpression: `#id=:id`,
+    ExpressionAttributeNames: {"#id": "device_id"},
+    ExpressionAttributeValues: {":id": deviceId}
+  };
+
+  return query(params)
+    .then(data => data.Items);
+}
+
+/**
  * Returns a promise for data on the specified query.
  *
  * @param query
@@ -131,6 +150,8 @@ function queryHandler(query) {
   switch (query.id) {
     case "0":
       return scanLastWeek();
+    case "1":
+      return queryByDeviceId(query.param);
     case "2":
       return queryByAction("unable_to_remove");
   }
