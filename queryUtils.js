@@ -141,6 +141,46 @@ function queryByDeviceId(deviceId) {
 }
 
 /**
+ * Returns a promise for all data of the malware.
+ *
+ * @param malware
+ * @returns {Promise}
+ */
+function queryByMalware(malware) {
+  let now = new Date();
+  let params = {
+    TableName: `IOT-${now.getFullYear()}-${now.getMonth() + 1}`,
+    IndexName: 'malware-index',
+    KeyConditionExpression: `#malware=:malware`,
+    ExpressionAttributeNames: {"#malware": "malware"},
+    ExpressionAttributeValues: {":malware": malware}
+  };
+
+  return query(params)
+    .then(data => data.Items);
+}
+
+/**
+ * Returns a promise for all data of the malware.
+ *
+ * @param company
+ * @returns {Promise}
+ */
+function queryByCompany(company) {
+  let now = new Date();
+  let params = {
+    TableName: `IOT-${now.getFullYear()}-${now.getMonth() + 1}`,
+    IndexName: 'company-index',
+    KeyConditionExpression: `#company=:company`,
+    ExpressionAttributeNames: {"#company": "company"},
+    ExpressionAttributeValues: {":company": company}
+  };
+
+  return query(params)
+    .then(data => data.Items);
+}
+
+/**
  * Returns a promise for data on the specified query.
  *
  * @param query
@@ -154,6 +194,12 @@ function queryHandler(query) {
       return queryByDeviceId(query.param);
     case "2":
       return queryByAction("unable_to_remove");
+    case "3":
+      return queryByMalware(query.param);
+    case "4":
+      return queryByCompany(query.param);
+    default:
+      return q.reject(new Error("Unknown type of query"));
   }
 }
 
