@@ -5,7 +5,6 @@ let PORT = process.env.PORT || 3000;
 //noinspection JSUnusedLocalSymbols
 let express = require('express'),
   morgan = require('morgan'),
-  redis = require('ioredis'),
   q = require('q'),
   queryUtils = require('./queryUtils'),
   aws = require('aws-sdk');

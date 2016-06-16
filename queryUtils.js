@@ -1,6 +1,8 @@
 'use strict';
 
 let aws = require('aws-sdk'),
+  Redis = require('ioredis'),
+  redis = new Redis(),
   q = require('q');
 
 aws.config.update({region: 'us-west-2'});
@@ -187,6 +189,33 @@ function queryByCompany(company) {
  * @returns {Promise}
  */
 function queryHandler(query) {
+
+  /*
+   * key syntax:
+   * [query_id]-[query_param] with TTL of 1 minute.
+   */
+  let queryCacheKey = `${query.id}-${query.param}`;
+
+  // retrieve results from cache or query dynamodb and update cache.
+  return redis.get(queryCacheKey)
+    .then(JSON.parse)
+    .then(cacheHit => cacheHit ? cacheHit : querySelector(query))
+    .then(results => {
+      redis.set(queryCacheKey, JSON.stringify(results), 'ex', 60);
+      return results;
+    });
+}
+
+/**
+ * Runs the right query given the query object that contains
+ * the query-id and query-param (optional).
+ *
+ * Returns a promise for the query results.
+ *
+ * @param query the query
+ * @returns {Promise} of the data
+ */
+function querySelector(query) {
   switch (query.id) {
     case "0":
       return scanLastWeek();
