@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "node_modules/bower/bin/bower install -F",
-    "start": "echo \"Running npm install and postintsall\" && npm install && echo \"Starting server\" && node --harmony server.js"
+    "start": "echo \"Running npm postintsall\" && npm run postinstall && echo \"Starting server\" && node --harmony server.js"
   },
   "repository": {
     "type": "git",
@@ -23,9 +23,7 @@
     "express": "^4.13.4",
     "ioredis": "^2.0.1",
     "morgan": "^1.7.0",
-    "q": "^1.4.1"
-  },
-  "devDependencies": {
+    "q": "^1.4.1",
     "bower": "^1.7.9"
   }
 }
