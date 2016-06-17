@@ -1,8 +1,11 @@
 'use strict';
 
+let REDIS_IP = process.env.REDIS_IP || "localhost",
+  REDIS_PORT = process.env.REDIS_PORT || 6379;
+
 let aws = require('aws-sdk'),
   Redis = require('ioredis'),
-  redis = new Redis(),
+  redis = new Redis(REDIS_PORT, REDIS_IP),
   q = require('q');
 
 aws.config.update({region: 'us-west-2'});
