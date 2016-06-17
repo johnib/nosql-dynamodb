@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "node_modules/bower/bin/bower install -F",
-    "start": "echo \"Running npm postinstall\" && npm postinstall && echo \"Starting server\" && node --harmony server.js"
+    "start": "echo \"Running npm run postinstall\" && npm run postinstall && echo \"Starting server\" && node --harmony server.js"
   },
   "repository": {
     "type": "git",
