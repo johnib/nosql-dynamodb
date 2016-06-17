@@ -26,15 +26,7 @@ app.get('/queryUtils/:id/:param?', (req, res) => {
 
   queryUtils.handler(req.params)
     .then(results => {
-      res.json(results);
-      return 200;
-    })
-    .catch(() => {
-      return 400;
-    })
-    .finally(errCode => {
-      res.statusCode(errCode);
-      res.end();
+      res.json(results).end();
     });
 });
 
