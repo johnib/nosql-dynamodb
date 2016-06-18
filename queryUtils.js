@@ -250,8 +250,8 @@ function queryTop100(query) {
 }
 
 function getTop100(query) {
-  return redis.get(`top100-${query.id}-${query.param}`)
-    .then(JSON.parse)
+  return redis.lrange(`top100-${query.id}-${query.param}`, 0, -1)
+    .then(data => data.map(JSON.parse))
     .then(results => {
       if (!results) {
         // in case value not in cache
