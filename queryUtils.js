@@ -250,13 +250,18 @@ function queryTop100(query) {
 }
 
 function getTop100(query) {
-  return redis.lrange(`top100-${query.id}-${query.param}`, 0, -1)
+  let keyName = `top100-${query.id}-${query.param}`;
+  return redis.lrange(keyName, 0, -1)
     .then(data => data.map(JSON.parse))
     .then(results => {
-      if (!results) {
+      if (results.length == 0) {
         // in case value not in cache
         console.error(`Cache miss for top100 of ${JSON.stringify(query)}`);
-        return queryTop100(query);
+        return queryTop100(query)
+          .then(data => {
+            redis.rpush(keyName, data.map(JSON.stringify));
+            return data;
+          });
       }
 
       return results;
