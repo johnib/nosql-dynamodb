@@ -21,13 +21,20 @@ app.get('/queryList', (req, res) => {
   res.end();
 });
 
-app.get('/queryUtils/:id/:param?', (req, res) => {
+app.get('/query/:id/:param?', (req, res) => {
   console.log(req.params);
 
   queryUtils.handler(req.params)
     .then(results => {
       res.json(results).end();
     });
+});
+
+app.get('/top100/:id/:param?', (req, res) => {
+  queryUtils.top100(req.params)
+    .then(results => {
+      res.json(results).end();
+    })
 });
 
 app.listen(PORT, () => console.log(`Listening on port http://localhost:${PORT}`));

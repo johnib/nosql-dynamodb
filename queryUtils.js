@@ -235,9 +235,38 @@ function querySelector(query) {
   }
 }
 
+/**
+ * Returns a promise for the top 100 results by date.
+ *
+ * @param query
+ * @returns {Promise}
+ */
+function queryTop100(query) {
+  return querySelector(query)
+    .then(results => {
+      results.sort((itemA, itemB) => itemB.timestamp - itemA.timestamp);
+      return results.slice(0, 100);
+    })
+}
+
+function getTop100(query) {
+  return redis.get(`top100-${query.id}-${query.param}`)
+    .then(JSON.parse)
+    .then(results => {
+      if (!results) {
+        // in case value not in cache
+        console.error(`Cache miss for top100 of ${JSON.stringify(query)}`);
+        return queryTop100(query);
+      }
+
+      return results;
+    });
+}
+
 module.exports = {
-  handler: queryHandler,
-  "enum": queryEnum
+  "handler": queryHandler,
+  "enum": queryEnum,
+  "top100": getTop100
 };
 
 /**
@@ -278,3 +307,17 @@ function query(params) {
 
   return defer.promise;
 }
+
+/**
+ * Updates the cache with the top100-unable_to_remove results.
+ * Runs every 10 seconds.
+ *
+ * TTL for cache is 1 minute.
+ */
+setInterval(() => {
+  let query = {id: "2", param: "unable_to_remove"};
+
+  queryTop100(query)
+    .then(JSON.stringify)
+    .then(results => redis.set(`top100-${query.id}-${query.param}`, results, 'ex', 60));
+}, 10000);

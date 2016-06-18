@@ -12,7 +12,11 @@ app.service('dynamodb', function ($http) {
       return prev + form[key] + '/';
     }, "/");
 
-    return $http.get('/queryUtils' + params);
+    return $http.get('/query' + params);
+  };
+
+  this.top100 = function (type, param) {
+    return $http.get('/top100/'.concat(type, '/', param));
   }
 
 });
@@ -26,13 +30,18 @@ app.controller('main', function ($scope, dynamodb) {
       self.queryEnum = res.data;
     });
 
+  dynamodb.top100(2, "unable_to_remove")
+    .then(function (res) {
+      $scope.results = res.data;
+    });
+
   $scope.submit = function (form) {
     console.log(form);
 
     dynamodb.sendQuery(form)
       .then(function (res) {
         console.log(res);
-        
+
         res.data.sort(function (itemA, itemB) {
           return itemA.timestamp - itemB.timestamp
         });
