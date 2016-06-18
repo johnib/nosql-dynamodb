@@ -307,17 +307,3 @@ function query(params) {
 
   return defer.promise;
 }
-
-/**
- * Updates the cache with the top100-unable_to_remove results.
- * Runs every 10 seconds.
- *
- * TTL for cache is 1 minute.
- */
-setInterval(() => {
-  let query = {id: "2", param: "unable_to_remove"};
-
-  queryTop100(query)
-    .then(JSON.stringify)
-    .then(results => redis.set(`top100-${query.id}-${query.param}`, results, 'ex', 60));
-}, 10000);
