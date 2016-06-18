@@ -6,10 +6,7 @@ let PORT = process.env.PORT || 3000;
 let express = require('express'),
   morgan = require('morgan'),
   q = require('q'),
-  queryUtils = require('./queryUtils'),
-  aws = require('aws-sdk');
-
-aws.config.update({region: 'us-west-2'}); // Oregon
+  queryUtils = require('./queryUtils');
 
 let app = express();
 

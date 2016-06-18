@@ -8,7 +8,7 @@ let aws = require('aws-sdk'),
   redis = new Redis(REDIS_PORT, REDIS_IP),
   q = require('q');
 
-aws.config.update({region: 'us-west-2'});
+aws.config.update({region: 'us-east-1'});
 
 let docClient = new aws.DynamoDB.DocumentClient();
 let queryEnum = [
